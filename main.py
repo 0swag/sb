@@ -3,14 +3,16 @@ from discord.ext import commands
 import time
 from rgbprint import Color
 from rgbprint import gradient_print
+import sys
 
 def getToken():
     with open('token.txt', 'r') as file:
-        if file.read(1):
-            token = file.read()
+        token = file.read()
+        if token != None:
+            return token
         else:
             print(f"{Color.red}[!]{Color.reset} Make a file called token.txt and paste your token there")
-        return token
+            sys.exit()
 
 client = commands.Bot(command_prefix='#', self_bot=True)
 
