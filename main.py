@@ -36,5 +36,16 @@ async def parsenames(ctx):
             file.write(f"{member.name}\n")
     print(f"{Color.light_green}[+]{Color.reset} Saved usernames to output/{fname}.txt")
 
+@client.command()
+async def mystats(ctx):
+    guildsIn = 0
+    friends = 0
+    groupchats = 0
+    for friend in client.friends:
+        friends+=1
+    for guild in client.guilds:
+        guildsIn+=1
+    await ctx.reply(f"```🫂 Friends: {friends}\n🌐 Servers: {guildsIn}```")
+
 
 client.run(getToken())
