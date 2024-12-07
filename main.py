@@ -4,6 +4,7 @@ import time
 from rgbprint import Color
 from rgbprint import gradient_print
 import sys
+import random
 
 def getToken():
     with open('token.txt', 'r') as file:
@@ -22,10 +23,10 @@ async def on_ready():
 
 @client.command()
 async def parseids(ctx):
-    fname = time.time()
+    fname = f"{ctx.guild.name}-{time.time()}"
     for member in ctx.guild.members:
         with open(f"output/{fname}.txt", 'a') as file:
-            file.write(f"{member.id}\n")
+            file.write(f"<@{member.id}>\n")
     print(f"{Color.light_green}[+]{Color.reset} Saved IDs to output/{fname}.txt")
 
 @client.command()
@@ -40,12 +41,30 @@ async def parsenames(ctx):
 async def mystats(ctx):
     guildsIn = 0
     friends = 0
-    groupchats = 0
+    msgCount = 0
     for friend in client.friends:
         friends+=1
     for guild in client.guilds:
         guildsIn+=1
-    await ctx.reply(f"```🫂 Friends: {friends}\n🌐 Servers: {guildsIn}```")
+    async for message in ctx.channel.history(limit=None):
+        if message.author.id == client.user.id:
+            msgCount+=1
+    await ctx.reply(f"```🫂 Friends: {friends}\n🌐 Servers: {guildsIn}\n💬 Messages in this channel: {msgCount}```")
 
+@client.command()
+async def coinflip(ctx):
+    result = random.randint(0,1)
+    message = await ctx.reply("🪙 Flipping..")
+    time.sleep(1)
+    if result == 1:
+        await message.edit("🪙 It's tails!")
+    else:
+        await message.edit("🪙 It's heads!")
+
+@client.command()
+async def diceroll(ctx):
+    message = await ctx.reply('🎲 Rolling..')
+    time.sleep(1)
+    await message.edit(f'🎲 Rolled {random.randint(0,6)}')
 
 client.run(getToken())
