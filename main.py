@@ -5,6 +5,7 @@ from rgbprint import Color
 from rgbprint import gradient_print
 import sys
 import random
+from openai import OpenAI
 
 def getToken():
     with open('token.txt', 'r') as file:
@@ -66,5 +67,17 @@ async def diceroll(ctx):
     message = await ctx.reply('🎲 Rolling..')
     time.sleep(1)
     await message.edit(f'🎲 Rolled {random.randint(0,6)}')
+
+@client.command()
+async def ask(ctx):
+    aiclient = OpenAI()
+    prompt = ctx.message.content
+    response = aiclient.chat.completions.create(model="o1-preview", messages=[{'role': 'user', 'content': prompt}])
+    response = response.choices[0].message.content
+    await ctx.reply(response)
+
+#@client.command()
+#async def bumpsetup(ctx):
+
 
 client.run(getToken())
